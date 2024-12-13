@@ -835,7 +835,7 @@ void get_tp_info(void)
 		sprintf(tp_version_info, "[Vendor]Truly,[TP-IC]:NT36672C,[FW]0x%x,PID=%04X\n", tp_fw_version, ts->nvt_pid);
 	}
 
-	printk("[%s]: tp_version %s\n", __func__, tp_version_info);
+	NVT_LOG("[%s]: tp_version %s\n", __func__, tp_version_info);
 
 	hq_regiser_hw_info(HWID_CTP, tp_version_info);
 
@@ -2879,7 +2879,7 @@ int __init is_lcm_detect(char *str)
 		NVT_LOG("Func:%s is_ft 6:%d", __func__, is_ft_lcm);
 /* Huaqin add for HQ-148560 by caogaojie at 2021/9/30 end */
 	}
-	printk("Func:%s is_lcm_detect:%s", __func__, str);
+	NVT_LOG("Func:%s is_lcm_detect:%s", __func__, str);
 	return 0;
 }
  __setup("LCM_name=", is_lcm_detect);
@@ -2909,7 +2909,7 @@ static int32_t __init nvt_driver_init(void)
 /*K19A coad for HQ-147450 by feiwen at 2021/7/23 start*/
 	if ((4 != is_ft_lcm) && (5 != is_ft_lcm)){
 /*K19A coad for HQ-147450 by feiwen at 2021/7/23 end*/
-		printk("%s result  is_ft:%d", __func__, is_ft_lcm);
+		NVT_LOG("%s result  is_ft:%d", __func__, is_ft_lcm);
 		return -1;
 	}
 
