@@ -21,6 +21,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 /************************************************************************/
@@ -59,7 +61,7 @@
 
 static void __set_sb_dirty(struct super_block *sb)
 {
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 7, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
 	sb->s_dirt = 1;
 #else
 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
@@ -750,7 +752,7 @@ s32 ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
 	if (fid->size != old_size) {
 		printk(KERN_ERR "[EXFAT] truncate : can't skip it because of "
 				"size-mismatch(old:%lld->fid:%lld).\n"
-				, old_size, fid->size);
+				,old_size, fid->size);
 	}
 
 	if (old_size <= new_size)
@@ -1654,7 +1656,7 @@ s32 ffsRemoveDir(struct inode *inode, FILE_ID_T *fid)
 
 	fid->size = 0;
 	fid->start_clu = CLUSTER_32(~0);
-	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+	fid->flags = (p_fs->vol_type == EXFAT)? 0x03: 0x01;
 
 #ifdef CONFIG_EXFAT_DELAYED_SYNC
 	fs_sync(sb, 0);
@@ -1979,7 +1981,7 @@ void exfat_free_cluster(struct super_block *sb, CHAIN_T *p_chain, s32 do_relse)
 	if (p_chain->size <= 0) {
 		printk(KERN_ERR "[EXFAT] free_cluster : skip free-req clu:%u, "
 				"because of zero-size truncation\n"
-				, p_chain->dir);
+				,p_chain->dir);
 		return;
 	}
 
@@ -2251,7 +2253,7 @@ s32 clr_alloc_bitmap(struct super_block *sb, u32 clu)
 
 #ifdef CONFIG_EXFAT_DISCARD
 	if (opts->discard) {
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 37)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,37)
 		ret = sb_issue_discard(sb, START_SECTOR(clu), (1 << p_fs->sectors_per_clu_bits));
 #else
 		ret = sb_issue_discard(sb, START_SECTOR(clu), (1 << p_fs->sectors_per_clu_bits), GFP_NOFS, 0);
@@ -3302,7 +3304,7 @@ ENTRY_SET_CACHE_T *get_entry_set_in_dir(struct super_block *sb, CHAIN_T *p_dir, 
 
 	pos = (DENTRY_T *) &(es->__buf);
 
-	while (num_entries) {
+	while(num_entries) {
 		/* instead of copying whole sector, we will check every entry.
 		 * this will provide minimum stablity and consistancy.
 		 */
@@ -3418,7 +3420,7 @@ static s32 __write_partial_entries_in_entry_set(struct super_block *sb, ENTRY_SE
 	while (num_entries) {
 		/* white per sector base */
 		remaining_byte_in_sector = (1 << p_bd->sector_size_bits) - off;
-		copy_entries = MIN(remaining_byte_in_sector >> DENTRY_SIZE_BITS, num_entries);
+		copy_entries = MIN(remaining_byte_in_sector >> DENTRY_SIZE_BITS , num_entries);
 		buf = buf_getblk(sb, sec);
 		if (buf == NULL)
 			goto err_out;
@@ -3464,7 +3466,7 @@ s32 write_whole_entry_set(struct super_block *sb, ENTRY_SET_CACHE_T *es)
 s32 write_partial_entries_in_entry_set (struct super_block *sb, ENTRY_SET_CACHE_T *es, DENTRY_T *ep, u32 count)
 {
 	s32 ret, byte_offset, off;
-	u32 clu = 0;
+	u32 clu=0;
 	sector_t sec;
 	FS_INFO_T *p_fs = &(EXFAT_SB(sb)->fs_info);
 	BD_INFO_T *p_bd = &(EXFAT_SB(sb)->bd_info);
@@ -3481,7 +3483,7 @@ s32 write_partial_entries_in_entry_set (struct super_block *sb, ENTRY_SET_CACHE_
 	byte_offset = (es->sector - START_SECTOR(dir.dir)) << p_bd->sector_size_bits;
 	byte_offset += ((void **)ep - &(es->__buf)) + es->offset;
 
-	ret = _walk_fat_chain(sb, &dir, byte_offset, &clu);
+	ret =_walk_fat_chain(sb, &dir, byte_offset, &clu);
 	if (ret != FFS_SUCCESS)
 		return ret;
 	byte_offset &= p_fs->cluster_size - 1;	/* byte offset in cluster */

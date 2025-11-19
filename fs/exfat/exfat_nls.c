@@ -12,6 +12,8 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 /************************************************************************/
@@ -351,7 +353,7 @@ void nls_cstring_to_uniname(struct super_block *sb, UNI_NAME_T *p_uniname, u8 *p
 		lossy = TRUE;
 
 	if (nls == NULL) {
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 0, 101)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3,0,101)
 		i = utf8s_to_utf16s(p_cstring, MAX_NAME_LENGTH, uniname);
 #else
 		i = utf8s_to_utf16s(p_cstring, MAX_NAME_LENGTH, UTF16_HOST_ENDIAN, uniname, MAX_NAME_LENGTH);
@@ -359,7 +361,8 @@ void nls_cstring_to_uniname(struct super_block *sb, UNI_NAME_T *p_uniname, u8 *p
 		for (j = 0; j < i; j++)
 			SET16_A(upname + j * 2, nls_upper(sb, uniname[j]));
 		uniname[i] = '\0';
-	} else {
+	}
+	else {
 		i = j = 0;
 		while (j < (MAX_NAME_LENGTH-1)) {
 			if (*(p_cstring+i) == '\0')
