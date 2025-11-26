@@ -2789,7 +2789,7 @@ static int nvt_fb_notifier_callback(struct notifier_block *self, unsigned long e
 #endif
 /* Huaqin modify for HQ-131657 by liunianliang at 2021/06/16 end */
 /* Huaqin modify for HQ-131657 by feiwen at 2021/06/03 start */
-#ifdef TP_RESUME_EN
+#if TP_RESUME_EN
 			nvt_resume_queue_work();
 #else
 			nvt_ts_resume(&ts->client->dev);
