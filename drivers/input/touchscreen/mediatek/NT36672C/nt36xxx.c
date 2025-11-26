@@ -657,6 +657,8 @@ int32_t nvt_check_fw_status(void)
 	int32_t i = 0;
 	const int32_t retry = 50;
 
+	usleep_range(20000, 20000);
+
 	for (i = 0; i < retry; i++) {
 		//---set xdata index to EVENT BUF ADDR---
 		nvt_set_page(ts->mmap->EVENT_BUF_ADDR | EVENT_MAP_HANDSHAKING_or_SUB_CMD_BYTE);
@@ -991,7 +993,8 @@ static int32_t nvt_flash_close(struct inode *inode, struct file *file)
 {
 	struct nvt_flash_data *dev = file->private_data;
 
-	kfree(dev);
+	if (dev)
+		kfree(dev);
 
 	return 0;
 }
@@ -1718,7 +1721,7 @@ static ssize_t nvt_irq_show(
 	ssize_t count = 0;
 	struct irq_desc *desc = irq_to_desc(ts->client->irq);
 
-	count = snprintf(buf, PAGE_SIZE, "irq_depth:%d\n", desc->depth);
+	count = snprintf(buf, sizeof(buf), "irq_depth:%d\n", desc->depth);
 
 	return count;
 }
