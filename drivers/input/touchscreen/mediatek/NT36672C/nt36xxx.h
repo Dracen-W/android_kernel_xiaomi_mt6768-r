@@ -82,7 +82,7 @@ void nvt_lockdown_proc_deinit(void);
 //---Input device info.---
 #define NVT_TS_NAME "NVTCapacitiveTouchScreen"
 
-#define NVT_IRQ_SWITCH
+#define NVT_IRQ_SWITCH 1
 //---Touch info.---
 #define TOUCH_DEFAULT_MAX_WIDTH 1080
 #define TOUCH_DEFAULT_MAX_HEIGHT 2400
