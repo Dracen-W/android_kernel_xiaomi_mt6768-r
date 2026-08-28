@@ -42,12 +42,17 @@ jobs:
             "$RUNNER_TEMP/droidspaces"
           git -C "$RUNNER_TEMP/droidspaces" sparse-checkout set \
             Documentation/resources/kernel-patches/non-GKI
-          find "$RUNNER_TEMP/droidspaces/Documentation/resources/kernel-patches/non-GKI" \
-            -type f -name '*.patch' -print0 | sort -z | \
-            while IFS= read -r -d '' patch_file; do
-              echo "Applying $(basename "$patch_file")"
-              patch --batch --forward --strip=1 < "$patch_file"
-            done
+          patch_dir="$RUNNER_TEMP/droidspaces/Documentation/resources/kernel-patches/non-GKI"
+          if test -f net/netfilter/xt_qtaguid.c; then
+            echo "Applying xt_qtaguid compatibility patch"
+            patch --batch --forward --strip=1 < \
+              "$patch_dir/01.fix_kernel_panic_in_xt_qtaguid.patch"
+          else
+            echo "xt_qtaguid was removed from this kernel tree; its patch is not applicable."
+          fi
+          echo "Applying cgroup compatibility patch"
+          patch --batch --forward --strip=1 < \
+            "$patch_dir/02.fix_restore cgroup file prefix handling .patch"
 
       - name: Build merlin kernel
         env:
