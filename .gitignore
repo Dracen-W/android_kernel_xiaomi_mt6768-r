@@ -10,6 +10,10 @@
 # Normal rules (sorted alphabetically)
 #
 .*
+# Keep GitHub Actions workflows trackable.
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
 *.a
 *.bin
 *.bz2
