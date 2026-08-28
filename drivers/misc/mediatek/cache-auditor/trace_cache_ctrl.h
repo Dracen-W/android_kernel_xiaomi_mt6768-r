@@ -18,6 +18,7 @@
 #if !defined(_TRACE_CACHE_CTRL_H) || defined(TRACE_HEARDER_MULTI_READ)
 #define _TRACE_CACHE_CTRL_H
 
+#include <linux/cgroup.h>
 #include <linux/sched.h>
 #include <linux/types.h>
 #include <linux/tracepoint.h>
@@ -44,7 +45,7 @@ TRACE_EVENT(skip_cache_control,
 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
 		__entry->next_pid	    = next->pid;
 		__entry->next_prio	    = next->prio;
-		__entry->next_st_cgrp_id    = next->cgroups->subsys[3]->cgroup->id;
+		__entry->next_st_cgrp_id    = cgroup_id(next->cgroups->subsys[3]->cgroup);
 		__entry->next_oom_score_adj = next->signal->oom_score_adj;
 		__entry->is_mem_stall       = (next->flags & PF_MEMSTALL);
 		__entry->is_bw_congested    = is_bw_congested;
@@ -79,7 +80,7 @@ TRACE_EVENT(apply_cache_control,
 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
 		__entry->next_pid	    = next->pid;
 		__entry->next_prio	    = next->prio;
-		__entry->next_st_cgrp_id    = next->cgroups->subsys[3]->cgroup->id;
+		__entry->next_st_cgrp_id    = cgroup_id(next->cgroups->subsys[3]->cgroup);
 		__entry->cpu		    = cpu;
 		__entry->partition_group    = partition_group;
 	),
