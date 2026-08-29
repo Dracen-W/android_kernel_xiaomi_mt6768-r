@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -95,12 +95,15 @@ jobs:
           (cd release/anykernel3 && zip -r9 ../merlin-anykernel3-${{ github.sha }}.zip . \
             -x '.git/*' 'README.md' '*placeholder')
 
-      - name: Upload kernel artifacts
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: merlin-kernel-build-${{ github.sha }}
-          if-no-files-found: error
-          retention-days: 14
-          path: |
+          files: |
             release/merlin-kernel-${{ github.sha }}.tar.gz
             release/merlin-anykernel3-${{ github.sha }}.zip
+          tag_name: kernel-build-${{ github.sha }}
+          body: |
+            Merlin Droidspaces kernel build
+            Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
