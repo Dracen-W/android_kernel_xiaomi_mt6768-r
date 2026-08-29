@@ -77,30 +77,11 @@ jobs:
           cp out/.config release/kernel/
           tar -C release/kernel -czf release/merlin-kernel-${{ github.sha }}.tar.gz .
 
-      - name: Build AnyKernel3 flashable ZIP
-        run: |
-          git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git release/anykernel3
-          rm -rf release/anykernel3/.git release/anykernel3/patch/* release/anykernel3/ramdisk/*
-          cp out/arch/arm64/boot/Image.gz release/anykernel3/Image.gz
-          sed -i \
-            -e 's/kernel.string=ExampleKernel by osm0sis @ xda-developers/kernel.string=Merlin Droidspaces kernel/' \
-            -e 's/do.devicecheck=1/do.devicecheck=1/' \
-            -e 's/device.name1=maguro/device.name1=merlin/' \
-            -e 's/device.name2=toro/device.name2=/' \
-            -e 's/device.name3=toroplus/device.name3=/' \
-            -e 's/device.name4=tuna/device.name4=/' \
-            -e 's#BLOCK=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot;#BLOCK=auto;#' \
-            release/anykernel3/anykernel.sh
-          printf 'Merlin Droidspaces kernel\n' > release/anykernel3/banner
-          (cd release/anykernel3 && zip -r9 ../merlin-anykernel3-${{ github.sha }}.zip . \
-            -x '.git/*' 'README.md' '*placeholder')
-
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             release/merlin-kernel-${{ github.sha }}.tar.gz
-            release/merlin-anykernel3-${{ github.sha }}.zip
           tag_name: kernel-build-${{ github.sha }}
           body: |
             Merlin Droidspaces kernel build
